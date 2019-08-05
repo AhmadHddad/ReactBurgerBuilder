@@ -2,44 +2,16 @@ import React from 'react';
 import CheckoutSummary from "../../components/Order/CheckoutSummary/CheckoutSummary";
 import {Route} from 'react-router-dom';
 import ContactData from './ContactData/ContactData';
+import {connect} from "react-redux";
 
-
-const INGREDIENTS_PRICES = {
-	salad: 0.2,
-	bacon: 0.9,
-	cheese: 0.3,
-	meat: 1.2
-};
 
 class Checkout extends React.Component {
-	state = {
-		ingredients: {
-			meat: 1,
-			salad: 1,
-			cheese: 1,
-			bacon: 1,
-		},
-		totalPrice: 5,
-	};
 
 	componentDidMount() {
-
-		let totalPrice = 0;
-		const query = new URLSearchParams(this.props.location.search);
-		if (!this.props.location.search) {
+		if (this.props.totalPrice <= 4) {
 			alert('Please Orders Burger First!');
-			this.props.history.push('/');
-
+			this.props.history.replace('/');
 		}
-		let ingredients = this.state.ingredients;
-		for (let i of query.entries()) {
-			ingredients[i[0]] = +i[1]
-		}
-		totalPrice = (4 + Object.keys(ingredients).map(i =>
-			ingredients[i] * INGREDIENTS_PRICES[i]
-		).reduce((acc, curr) => totalPrice = acc + curr)).toFixed(2);
-
-		this.setState({ingredients: ingredients, totalPrice: totalPrice})
 	}
 
 	checkoutCanceled = () => {
@@ -51,23 +23,27 @@ class Checkout extends React.Component {
 	};
 
 	render() {
+		console.log('this is Checkout' );
 		return (
 			<div>
 				<CheckoutSummary
-					ingredients={this.state.ingredients}
-					totalPrice={this.state.totalPrice}
 					cancel={this.checkoutCanceled}
 					continue={this.checkoutContinued}
+					ingredients={this.props.ingredients}
+					totalPrice={this.props.totalPrice}
 				/>
 
-				<Route path={this.props.match.path + '/contact-data'}
-				       render={(props) => <ContactData
-					       ingredients={this.state.ingredients}
-					       totalPrice={this.state.totalPrice}
-					       {...props} />}/>
+				<Route path={this.props.match.path + '/contact-data'} component={ContactData}/>
 			</div>
 		);
 	}
 }
 
-export default Checkout;
+const mapStateToProps = state => {
+
+	return {
+		ingredients: state.burgerBuilderReducer.ingredients,
+		totalPrice: state.burgerBuilderReducer.totalPrice,
+	};
+};
+export default connect(mapStateToProps)(Checkout);
