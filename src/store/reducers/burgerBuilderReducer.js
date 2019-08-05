@@ -7,7 +7,8 @@ const initialState = {
 		bacon: 0,
 		cheese: 0,
 		meat: 0,
-	},*/ingredients:null,
+	},*/
+ingredients:null,
 	totalPrice: 4,
 	err: false,
 };
@@ -72,6 +73,7 @@ const burgerBuilderReducer = (state = initialState, action) => {
 		case actionTypes.RESET_INGREDIENTS:
 			return {
 				...state,
+				totalPrice:4,
 				ingredients: {
 					salad: 0,
 					bacon: 0,
