@@ -11,7 +11,7 @@ const BuildControls = props => {
 		{label: "Meat", type: "meat"}
 	];
 
-	let buildControlmapping = controls.map(ctrl => {
+	let buildControlMapping = controls.map(ctrl => {
 		return (
 			<BuildControl
 				key={ctrl.label}
@@ -31,13 +31,13 @@ const BuildControls = props => {
 					Current Price: <strong>{props.totalPrices}$</strong>
 				</p>
 
-				{buildControlmapping}
+				{buildControlMapping}
 
 				<button
 					className={classes.OrderButton}
 					disabled={!props.purchasable}
 					onClick={props.purchasing}>
-					Order Now
+					{props.isAuthenticated ? 'Order Now' : 'Sign-in to order'}
 				</button>
 			</div>
 		</React.Fragment>

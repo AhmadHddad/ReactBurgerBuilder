@@ -7,14 +7,13 @@ const initialState = {
 	purchased: false,
 };
 
-const reducer = (state = initialState, action) => {
+const orderReducer = (state = initialState, action) => {
 
 	switch (action.type) {
 		case actionTypes.PURCHASE_BURGER_SUCCESS:
 			const newOrderData = {
 				id: action.id,
 				...action.orderData,
-
 			};
 			return {
 				...state,
@@ -55,10 +54,11 @@ const reducer = (state = initialState, action) => {
 
 		default:
 			return {
-				...state
+				...state,
+
 			};
 	}
 
 };
 
-export default reducer;
+export default orderReducer;

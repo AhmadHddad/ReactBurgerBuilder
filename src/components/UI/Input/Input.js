@@ -40,9 +40,7 @@ const Input = (props) => {
 			                      value={props.value}
 			                      className={myClasses.join(' ')}
 			                      onChange={props.changed}
-			                      required={props.required}
-
-			/>
+			                      required={props.required}/>
 
 	}
 

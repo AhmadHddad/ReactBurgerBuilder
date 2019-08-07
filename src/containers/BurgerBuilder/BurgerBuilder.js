@@ -24,10 +24,7 @@ class BurgerBuilder extends React.Component {
 
 	};
 
-	constructor(props) {
-	    super(props);
-		this.props.initIngredients();
-			}
+
 	/*
 		componentDidMount() {
 			axios.get('ingredients.json')
@@ -36,6 +33,12 @@ class BurgerBuilder extends React.Component {
 				);
 		}
 	*/
+
+	componentDidMount() {
+		this.props.initIngredients();
+	}
+
+
 
 	updatePurchaseState = (updatedIngredients) => {
 
@@ -49,7 +52,13 @@ class BurgerBuilder extends React.Component {
 	};
 
 	purchaseHandler = () => {
-		this.setState({purchasing: true});
+		if (this.props.isAuthenticated){
+			this.setState({purchasing: true});
+		}
+		else {
+			this.props.history.push('/auth')
+		}
+
 	};
 
 	purchasingCancelHandler = () => {
@@ -57,7 +66,6 @@ class BurgerBuilder extends React.Component {
 	};
 
 	purchasingContinueHandler = () => {
-
 		this.props.history.push('/checkout');
 	};
 
@@ -79,6 +87,7 @@ class BurgerBuilder extends React.Component {
 						prices={INGREDIENTS_PRICES}
 						purchasable={this.updatePurchaseState(this.props.ingredients)}
 						purchasing={this.purchaseHandler}
+						isAuthenticated={this.props.isAuthenticated}
 					/>
 				</React.Fragment>
 			);
@@ -110,7 +119,8 @@ const mapStateToProps = state => {
 	return {
 		ingredients: state.burgerBuilderReducer.ingredients,
 		totalPrice: state.burgerBuilderReducer.totalPrice,
-		err: state.burgerBuilderReducer.err
+		err: state.burgerBuilderReducer.err,
+		isAuthenticated:state.authReducer.token
 
 	}
 };

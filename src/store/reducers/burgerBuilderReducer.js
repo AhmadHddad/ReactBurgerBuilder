@@ -30,11 +30,11 @@ const burgerBuilderReducer = (state = initialState, action) => {
 		case actionTypes.ADD_INGREDIENT:
 
 			newIngredients[action.ingredientName] = state.ingredients[action.ingredientName] + 1;
-			 totalPrice = (Number(state.totalPrice) + Number(INGREDIENTS_PRICES[action.ingredientName])).toFixed(2);
+			totalPrice = (Number(state.totalPrice) + Number(INGREDIENTS_PRICES[action.ingredientName])).toFixed(2);
 			return {
 				...state,
-				 ingredients: newIngredients,
-				totalPrice:totalPrice,
+				ingredients: newIngredients,
+				totalPrice: totalPrice,
 			};
 
 		case actionTypes.REMOVE_INGREDIENT:
@@ -48,22 +48,27 @@ const burgerBuilderReducer = (state = initialState, action) => {
 				totalPrice: totalPrice,
 			};
 		case actionTypes.GET_INGREDIENTS:
-			if (!state.ingredients){
-				return {
-					...state,
-					ingredients: {salad: action.ingredients.salad,
-						bacon: action.ingredients.bacon,
-						cheese: action.ingredients.cheese,
-						meat: action.ingredients.meat,},
-					err: false,
-					totalPrice:4
-				};
-			}
-			else {
-				return {
-					...state
-				}
-			}
+						if (!state.ingredients){
+							return {
+								...state,
+								ingredients: {salad: action.ingredients.salad,
+									bacon: action.ingredients.bacon,
+									cheese: action.ingredients.cheese,
+									meat: action.ingredients.meat,},
+								err: false,
+								totalPrice:4
+							};
+						}
+						else {return {...state,};}
+/*			return {
+				...state,
+				ingredients: {salad: action.ingredients.salad,
+					bacon: action.ingredients.bacon,
+					cheese: action.ingredients.cheese,
+					meat: action.ingredients.meat,},
+				err: false,
+				totalPrice:4
+			};*/
 
 		case actionTypes.FETCH_INGREDIENTS_FAILED:
 			return {
@@ -78,8 +83,8 @@ const burgerBuilderReducer = (state = initialState, action) => {
 					salad: 0,
 					bacon: 0,
 					cheese: 0,
-					meat: 0,
-				}};
+					meat: 0,}
+			};
 		default:
 			return state;
 

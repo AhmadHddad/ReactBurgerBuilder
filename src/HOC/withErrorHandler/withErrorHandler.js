@@ -3,22 +3,31 @@ import Model from "../../components/UI/Model/Model";
 
 
 const withErrorHandler = (WrappedComponent, axios) => {
+
 	return class extends React.Component {
 
 		state = {
 			error: null
 		};
 
+
 		constructor(props, context) {
 			super(props, context);
-			this.reqInterceptor = axios.interceptors.request.use(req => {
-				this.setState({error: null});
-				return req
-			}, err => this.setState({error: err}));
-			this.resInterceptor = axios.interceptors.response.use(res => res, (err) => {
-				this.setState({error: err});
-			})
+
+			try {
+				this.reqInterceptor = axios.interceptors.request.use(req => {
+					this.setState({error: null});
+					return req
+				}, err => this.setState({error: err}));
+				this.resInterceptor = axios.interceptors.response.use(res => res, (err) => {
+					this.setState({error: err});
+				})
+			}
+			catch (e) {
+				console.log('this is error from try and catch',e );
+			}
 		}
+
 
 		componentWillUnmount() {
 			axios.interceptors.request.eject(this.reqInterceptor);

@@ -19,13 +19,11 @@ export const getIngredients = (ingredients) => {
 	}
 };
 
-export  const fetchIngredientsFailed=() => {
-    return{
-    	type:actionTypes.FETCH_INGREDIENTS_FAILED
-    }
+export const fetchIngredientsFailed = () => {
+	return {
+		type: actionTypes.FETCH_INGREDIENTS_FAILED
+	}
 };
-
-
 
 export const initIngredients = () => {
 	return dispatch => {

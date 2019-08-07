@@ -7,6 +7,7 @@ import axios from '../../../axios/axiosOrders';
 import {connect} from "react-redux";
 import withErrorHandler from "../../../HOC/withErrorHandler/withErrorHandler";
 import * as actionCreator from '../../../store/actions/actionCreators/orderActionCreator'
+import {checkValidity} from "../../../shared/checkValidity";
 
 
 class ContactData extends React.Component {
@@ -16,11 +17,11 @@ class ContactData extends React.Component {
 				elementType: 'input',
 				elementConfig: {
 					type: 'text',
-					placeholder: 'Your Name',
+					placeholder: 'Your Name'
 				},
 				value: '',
 				validation: {
-					required: true,
+					required: true
 				},
 				valid: false,
 				touched: false
@@ -29,11 +30,11 @@ class ContactData extends React.Component {
 				elementType: 'input',
 				elementConfig: {
 					type: 'text',
-					placeholder: 'Your St',
+					placeholder: 'Street'
 				},
 				value: '',
 				validation: {
-					required: true,
+					required: true
 				},
 				valid: false,
 				touched: false
@@ -42,85 +43,66 @@ class ContactData extends React.Component {
 				elementType: 'input',
 				elementConfig: {
 					type: 'text',
-					placeholder: 'Your ZIP Code',
+					placeholder: 'ZIP Code'
 				},
 				value: '',
 				validation: {
 					required: true,
 					minLength: 5,
-					maxLength: 5
+					maxLength: 5,
+					isNumeric: true
 				},
 				valid: false,
 				touched: false
-
 			},
 			country: {
 				elementType: 'input',
 				elementConfig: {
 					type: 'text',
-					placeholder: 'Country',
+					placeholder: 'Country'
 				},
 				value: '',
 				validation: {
-					required: true,
+					required: true
 				},
 				valid: false,
 				touched: false
-
 			},
 			email: {
 				elementType: 'input',
 				elementConfig: {
 					type: 'email',
-					placeholder: 'Your Email',
+					placeholder: 'Your E-Mail'
 				},
 				value: '',
 				validation: {
 					required: true,
+					isEmail: true
 				},
 				valid: false,
 				touched: false
-
 			},
 			deliveryMethod: {
 				elementType: 'select',
 				elementConfig: {
 					options: [
 						{value: 'fastest', displayValue: 'Fastest'},
-						{value: 'cheapest', displayValue: 'Cheapest'},
+						{value: 'cheapest', displayValue: 'Cheapest'}
 					]
 				},
 				value: 'cheapest',
-				valid: true,
-			},
-
+				validation: {},
+				valid: true
+			}
 		},
 		showModel: false,
 		formIsValid: false,
 
 	};
 
-	checkValidity = (value, validation) => {
-		let isValid = true;
-		if (validation) {
-
-			if (validation.required) {
-				isValid = value.trim() !== '' && isValid
-			}
-			if (validation.minLength) {
-				isValid = value.length >= validation.minLength && isValid
-			}
-			if (validation.maxLength) {
-				isValid = value.length <= validation.maxLength && isValid
-			}
-		}
-		return isValid;
-	};
-
 	componentDidUpdate() {
-		if (this.props.purchased) {
+		if (this.props.totalPrice === 4) {
 			this.props.history.push('/');
-
 		}
 	}
 
@@ -134,10 +116,11 @@ class ContactData extends React.Component {
 		const order = {
 			ingredients: this.props.ingredients,
 			totalPrice: this.props.totalPrice,
-			orderData: orderData
+			orderData: orderData,
+			userId: this.props.userId
 
 		};
-		this.props.purchaseBurger(order);
+		this.props.purchaseBurger(order, this.props.token);
 
 	};
 
@@ -147,7 +130,7 @@ class ContactData extends React.Component {
 			...updatedOrderForm[id]
 		};
 		updatedFormElement.value = event.target.value;
-		updatedFormElement.valid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
+		updatedFormElement.valid = checkValidity(updatedFormElement.value, updatedFormElement.validation);
 		updatedFormElement.touched = true;
 		updatedOrderForm[id] = updatedFormElement;
 
@@ -208,13 +191,15 @@ const mapStateToProps = state => {
 		ingredients: state.burgerBuilderReducer.ingredients,
 		totalPrice: state.burgerBuilderReducer.totalPrice,
 		loading: state.orderReducer.loading,
-		purchased: state.orderReducer.purchased
+		purchased: state.orderReducer.purchased,
+		token: state.authReducer.token,
+		userId: state.authReducer.userId
 	};
 };
 
 const mapDispatchToProps = dispatch => {
 	return {
-		purchaseBurger: (order) => dispatch(actionCreator.purchaseBurger(order))
+		purchaseBurger: (order, token) => dispatch(actionCreator.purchaseBurger(order, token))
 	}
 };
 export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(ContactData, axios));

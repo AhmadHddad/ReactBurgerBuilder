@@ -21,21 +21,21 @@ export const purchaseBurgerStart = () => {
 	}
 };
 
+// here you can remove this but you must go to the burgerReducer and GET_INGREDIENTS actionType you must return {...state, ingredients} without the if statement
 export const resetIngredients = () => {
 	return {
 		type: actionTypes.RESET_INGREDIENTS
 	}
 };
 
-export const purchaseBurger = (orderData) => {
-
+export const purchaseBurger = (orderData, token) => {
 	return dispatch => {
-		dispatch(resetIngredients());
+
 		dispatch(purchaseBurgerStart());
-		axios.post("orders.json ", orderData)
+		axios.post("orders.json?auth=" + token, orderData)
 			.then(response => {
-				console.log('response from purchaseBurgerStart', response.data);
-				dispatch(purchaseBurgerSuccess(response.data.name, orderData))
+				dispatch(resetIngredients());
+				dispatch(purchaseBurgerSuccess(response.data.name, token))
 			})
 			.catch(err => purchaseBurgerFail(err));
 	}
@@ -59,11 +59,12 @@ export const fetchOrdersStart = () => {
 	}
 };
 
-export const fetchOrders = () => {
+export const fetchOrders = (token, userId) => {
 
 	return dispatch => {
 		dispatch(fetchOrdersStart());
-		axios.get('orders.json')
+		const queryParams = '?auth=' + token + '&orderBy="userId"&equalTo="' + userId + '"';
+		axios.get('orders.json' + queryParams)
 			.then(response => {
 				let orders = [];
 				for (let key in response.data) {
@@ -77,6 +78,9 @@ export const fetchOrders = () => {
 			.catch(err => dispatch(fetchOrdersFail(err)));
 	}
 };
+
+
+
 
 
 

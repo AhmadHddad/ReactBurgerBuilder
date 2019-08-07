@@ -4,9 +4,12 @@ import {NavLink} from "react-router-dom";
 
 
 const NavigationItem = (props) => {
+
+
+
 	return (
 		<li className={classes.NavigationItem} style={props.style}>
-			<NavLink exact={props.exact} to={props.link} activeClassName={classes.active} >
+			<NavLink onClick={props.click} exact={props.exact} to={props.link} activeClassName={classes.active} >
 				{props.children}
 			</NavLink>
 		</li>
