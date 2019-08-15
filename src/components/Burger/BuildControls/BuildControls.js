@@ -28,17 +28,19 @@ const BuildControls = props => {
 		<React.Fragment>
 			<div className={classes.BuildControls}>
 				<p>
-					Current Price: <strong>{props.totalPrices}$</strong>
+					Current Price: <strong>{props.totalPrice}$</strong>
 				</p>
 
 				{buildControlMapping}
 
-				<button
-					className={classes.OrderButton}
-					disabled={!props.purchasable}
-					onClick={props.purchasing}>
+				{props.bottomButton}
+
+				{/*<OrderButton
+				className={'Order'}
+				disabled={!props.purchasable}
+				clicked={props.purchasing}>
 					{props.isAuthenticated ? 'Order Now' : 'Sign-in to order'}
-				</button>
+				</OrderButton>*/}
 			</div>
 		</React.Fragment>
 	);

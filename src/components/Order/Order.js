@@ -1,5 +1,6 @@
 import React from 'react'
 import classes from './Order.module.css';
+import SuccessDangerButton from "../UI/Buttons/SuccessDangerButton/SuccessDangerButton";
 
 
 const Order = (props) => {
@@ -20,9 +21,11 @@ const Order = (props) => {
 			key={ig.name}>{' '}{ig.name} {' : '} {ig.amount}</span>
 	});
 	return (
-		<div className={classes.Order}>
+		<div className={classes.Order} >
 			<p>{ingredieantsOutput}</p>
 			<p>Total Price = USD <strong>{props.totalPrice}</strong></p>
+			<SuccessDangerButton btnType='Danger' clicked={props.delete}>Delete Order</SuccessDangerButton>
+			<SuccessDangerButton btnType='Success' clicked={props.update}>Update Order</SuccessDangerButton>
 		</div>
 	);
 };

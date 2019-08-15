@@ -23,7 +23,6 @@ class Checkout extends React.Component {
 	};
 
 	render() {
-		console.log('this is Checkout' );
 		return (
 			<div>
 				<CheckoutSummary

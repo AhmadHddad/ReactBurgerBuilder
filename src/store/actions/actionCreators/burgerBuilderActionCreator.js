@@ -35,7 +35,29 @@ export const initIngredients = () => {
 
 };
 
+export const initPrices = () => {
+	return dispatch => {
+		axios.get('Prices.json')
+			.then((response) => dispatch(getPrices(response.data)))
+			.catch(err => dispatch(fetchPricesFailed())
+			);
+	}
+
+};
+
+
+export const getPrices = (prices) => {
+	return {
+		type: actionTypes.GET_PRICES, prices: prices
+	}
+};
 
 
 
+
+export const fetchPricesFailed = () => {
+	return {
+		type: actionTypes.FETCH_INGREDIENTS_FAILED
+	}
+};
 

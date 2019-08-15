@@ -5,14 +5,25 @@ import withErrorHandler from '../../HOC/withErrorHandler/withErrorHandler';
 import Spinner from "../../components/UI/Spinner/Spinner";
 import * as actionCreator from '../../store/actions/actionCreators/orderActionCreator';
 import {connect} from 'react-redux';
+import ChangeOrder from "./ChangeOrder/ChangeOrder";
+import Model from "../../components/UI/Model/Model";
+import classes from './Orders.module.css';
 
 
 class Orders extends React.Component {
 
+
 	componentDidMount() {
 		this.props.fetchOrders(this.props.token, this.props.userId)
-
 	}
+
+	goToUpdate = (orderId) => {
+		this.props.setOrderToUpdate(orderId, this.props.prices)
+	};
+
+	cancelUpdateHandler = () => {
+		this.props.updateCancel();
+	};
 
 	render() {
 		let orders;
@@ -21,22 +32,35 @@ class Orders extends React.Component {
 		} else if (!this.props.orders[0]) {
 			return orders = <div style={{textAlign: 'center'}}>There is no orders yet!!</div>
 		} else {
-			console.log('this is this.props.orders', this.props.orders);
 			orders = this.props.orders.map(order => {
 				return (
-					<React.Fragment>
+					<React.Fragment key={order.id}>
 						<Order
-							key={order.id}
+							update={() => this.goToUpdate(order.id)}
+							delete={() => this.props.deleteOrder(order.id)}
 							ingredients={order.ingredients}
 							totalPrice={order.totalPrice}/>
 					</React.Fragment>)
 			});
 		}
-
 		return (
-			<div>
-				{orders}
-			</div>
+			<React.Fragment>
+				<div className={classes.updateModel}>
+					<Model show={this.props.updating}
+					       hide={this.cancelUpdateHandler}
+					       updating={this.props.updating}>
+						<ChangeOrder
+							updating={this.props.updating}
+							orderToUpdate={this.props.orderToUpdate}
+							prices={this.props.prices}
+							{...this.props}
+						/>
+					</Model>
+				</div>
+				<div>
+					{orders}
+				</div>
+			</React.Fragment>
 		);
 	}
 }
@@ -45,8 +69,12 @@ const mapStateToProps = state => {
 	return {
 		orders: state.orderReducer.orders,
 		loading: state.orderReducer.loading,
+		updating: state.orderReducer.updating,
+		orderToUpdate: state.orderReducer.orderToUpdate,
+		ingredientsToUpdate: state.orderReducer.ingredientsToUpdate,
 		token: state.authReducer.token,
 		userId: state.authReducer.userId,
+		prices: state.burgerBuilderReducer.prices
 
 	}
 };
@@ -55,6 +83,15 @@ const mapDispatchToProps = dispatch => {
 		fetchOrders: (token, userId) => {
 			dispatch(actionCreator.fetchOrders(token, userId))
 		},
+		deleteOrder: (orderId, userId) => {
+			dispatch(actionCreator.deleteOrder(orderId, userId))
+		},
+		setOrderToUpdate: (orderId, prices) => {
+			dispatch(actionCreator.setOrderToUpdate(orderId, prices))
+		},
+		updateCancel:()=>{
+			dispatch(actionCreator.updateCancel())
+		}
 
 	}
 };

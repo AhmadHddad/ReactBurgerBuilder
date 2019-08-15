@@ -2,15 +2,10 @@ import * as actionTypes from '../actions/actoinTypes/actionTypes.js'
 
 
 const initialState = {
-/*	ingredients: {
-		salad: 0,
-		bacon: 0,
-		cheese: 0,
-		meat: 0,
-	},*/
-ingredients:null,
+	ingredients: null,
 	totalPrice: 4,
 	err: false,
+	prices: null
 };
 
 const INGREDIENTS_PRICES = {
@@ -48,28 +43,21 @@ const burgerBuilderReducer = (state = initialState, action) => {
 				totalPrice: totalPrice,
 			};
 		case actionTypes.GET_INGREDIENTS:
-						if (!state.ingredients){
-							return {
-								...state,
-								ingredients: {salad: action.ingredients.salad,
-									bacon: action.ingredients.bacon,
-									cheese: action.ingredients.cheese,
-									meat: action.ingredients.meat,},
-								err: false,
-								totalPrice:4
-							};
-						}
-						else {return {...state,};}
-/*			return {
-				...state,
-				ingredients: {salad: action.ingredients.salad,
-					bacon: action.ingredients.bacon,
-					cheese: action.ingredients.cheese,
-					meat: action.ingredients.meat,},
-				err: false,
-				totalPrice:4
-			};*/
-
+			if (!state.ingredients) {
+				return {
+					...state,
+					ingredients: {
+						salad: action.ingredients.salad,
+						bacon: action.ingredients.bacon,
+						cheese: action.ingredients.cheese,
+						meat: action.ingredients.meat,
+					},
+					err: false,
+					totalPrice: 4
+				};
+			} else {
+				return {...state,};
+			}
 		case actionTypes.FETCH_INGREDIENTS_FAILED:
 			return {
 				...state,
@@ -78,12 +66,23 @@ const burgerBuilderReducer = (state = initialState, action) => {
 		case actionTypes.RESET_INGREDIENTS:
 			return {
 				...state,
-				totalPrice:4,
+				totalPrice: 4,
 				ingredients: {
 					salad: 0,
 					bacon: 0,
 					cheese: 0,
-					meat: 0,}
+					meat: 0,
+				}
+			};
+		case actionTypes.GET_PRICES:
+			return {
+				...state,
+				prices: action.prices
+			};
+		case actionTypes.FETCH_PRICES_FAILED:
+			return {
+				...state,
+				err: true,
 			};
 		default:
 			return state;

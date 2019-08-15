@@ -79,6 +79,94 @@ export const fetchOrders = (token, userId) => {
 	}
 };
 
+export const deleteOrder = (orderId, userId) => {
+	const token  = localStorage.getItem('token');
+	return dispatch => {
+			dispatch(deleteOrderStart());
+		const queryParams = 'orders/' + orderId + '.json?auth=' + token;
+		axios.delete(queryParams)
+			.then(res => {
+				dispatch(deleteOrderSuccess(orderId));})
+			.catch(err => console.log('errDelete', err))
+
+	}
+	// const queryParams = orderId+'?auth=' + token + '&orderBy="userId"&equalTo="' + userId + '"';
+};
+
+
+
+export const submittingUpdate = (orderToUpdate,updatedIngredients,updatedTotalPrice) => {
+
+	const orderId= orderToUpdate.id;
+	const token  = localStorage.getItem('token');
+
+	const updatedOrder = {
+		ingredients:{...updatedIngredients},
+		orderData:{...orderToUpdate.orderData},
+		totalPrice:updatedTotalPrice,
+		userId:orderToUpdate.userId,
+	};
+		return dispatch => {
+			dispatch(updateOrderStart());
+			console.log('this is updateHandler');
+			const queryParams = 'orders/' + orderId + '.json?auth=' + token;
+			axios.put(queryParams, updatedOrder)
+				.then(res => {
+					return dispatch(updateOrderSuccess(updatedOrder,orderId));
+				})
+				.catch(err => console.log('this is err from update', err))
+		}
+};
+
+export const updateOrderStart=() => {
+  return{
+  	type:actionTypes.UPDATE_ORDER_START
+  }
+};
+export const updateOrderSuccess = (updatedOrder,orderId) => {
+	return {
+		type: actionTypes.UPDATE_ORDER_SUCCESS,orderId: orderId,updatedOrder:updatedOrder
+	}
+};
+export const updateIngredientAdd = (ingredientName) => {
+	return {
+		type: actionTypes.UPDATE_INGREDIENT_ADD, ingredientName: ingredientName
+	}
+};
+export const updateIngredientRemove = (ingredientName) => {
+	return {
+		type: actionTypes.UPDATE_INGREDIENT_REMOVE, ingredientName: ingredientName
+	}
+};
+
+
+export const deleteOrderStart=() => {
+    return{
+    	type:actionTypes.DELETE_ORDER_START
+    }
+};
+
+export const deleteOrderSuccess=(orderId) => {
+    return{
+    	type:actionTypes.DELETE_ORDER_SUCCESS,orderId:orderId
+    }
+};
+
+export const setOrderToUpdate=(orderId,prices) => {
+    return{
+    	type:actionTypes.SET_ORDER_TO_UPDATE, orderId:orderId,prices:prices
+    }
+};
+
+export const updateCancel=() => {
+    return{
+    	type:actionTypes.UPDATE_CANCEL
+    }
+};
+
+
+
+
 
 
 

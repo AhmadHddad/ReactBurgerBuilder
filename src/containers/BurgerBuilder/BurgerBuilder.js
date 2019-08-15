@@ -1,6 +1,6 @@
 import React from "react";
 import Burger from "../../components/Burger/Burger";
-import BurgerControls from "../../components/Burger/BuildControls/BuildControls";
+import BuildControls from "../../components/Burger/BuildControls/BuildControls";
 import Model from '../../components/UI/Model/Model';
 import OrderSummery from '../../components/Order/OrderSummery/OrderSummery';
 import Spinner from "../../components/UI/Spinner/Spinner";
@@ -8,40 +8,22 @@ import withErrorHandler from '../../HOC/withErrorHandler/withErrorHandler';
 import {connect} from "react-redux";
 import * as actionCreators from '../../store/actions/actionCreators/burgerBuilderActionCreator';
 import axios from '../../axios/axiosOrders';
+import SpecialButton from "../../components/UI/Buttons/SpecialButton/SpecialButton";
 
-//Global Variable for Prices
-const INGREDIENTS_PRICES = {
-	salad: 0.2,
-	bacon: 0.9,
-	cheese: 0.3,
-	meat: 1.2
-};
 
-class BurgerBuilder extends React.Component {
+export class BurgerBuilder extends React.Component {
 	state = {
 		purchasing: false,
 		spinner: false,
-
 	};
-
-
-	/*
-		componentDidMount() {
-			axios.get('ingredients.json')
-				.then((response) => this.props.getIngredients(response.data))
-				.catch(err => this.setState({errMsg: true})
-				);
-		}
-	*/
 
 	componentDidMount() {
 		this.props.initIngredients();
+		this.props.initPrices();
+
 	}
 
-
-
 	updatePurchaseState = (updatedIngredients) => {
-
 		let sum = Object.keys(updatedIngredients).map((el) => {
 			return updatedIngredients[el];
 		}).reduce((acc, cur) => {
@@ -52,10 +34,9 @@ class BurgerBuilder extends React.Component {
 	};
 
 	purchaseHandler = () => {
-		if (this.props.isAuthenticated){
+		if (this.props.isAuthenticated) {
 			this.setState({purchasing: true});
-		}
-		else {
+		} else {
 			this.props.history.push('/auth')
 		}
 
@@ -70,25 +51,35 @@ class BurgerBuilder extends React.Component {
 	};
 
 	render() {
+
 		const disabledInfo = {...this.props.ingredients};
 		let burger = this.props.err ? <div style={{textAlign: 'center'}}>something went WRONG!!</div> : <Spinner/>;
 		let orderSummery = null;
 
-		if (this.props.ingredients) {
+		if (this.props.ingredients && this.props.prices) {
+
+			const orderButton = (<SpecialButton
+				className={'Order'}
+				disabled={!this.updatePurchaseState(this.props.ingredients)}
+				clicked={this.purchaseHandler}>
+				{this.props.isAuthenticated ? 'Order Now' : 'Sign-in to order'}
+			</SpecialButton>);
 
 			burger = (
 				<React.Fragment>
-					<Burger  ingredients={this.props.ingredients}/>
-					<BurgerControls
-						totalPrices={this.props.totalPrice}
+					<Burger ingredients={this.props.ingredients}/>
+					<BuildControls
+						totalPrice={this.props.totalPrice}
 						ingredientAdded={this.props.onIngredientAdd}
 						ingredientRemoved={this.props.onIngredientRemove}
 						disabledInfo={disabledInfo}
-						prices={INGREDIENTS_PRICES}
-						purchasable={this.updatePurchaseState(this.props.ingredients)}
+						prices={this.props.prices}
+						purchasable={() => this.updatePurchaseState(this.props.ingredients)}
 						purchasing={this.purchaseHandler}
 						isAuthenticated={this.props.isAuthenticated}
+						bottomButton={orderButton}
 					/>
+
 				</React.Fragment>
 			);
 			orderSummery = (<OrderSummery
@@ -120,8 +111,8 @@ const mapStateToProps = state => {
 		ingredients: state.burgerBuilderReducer.ingredients,
 		totalPrice: state.burgerBuilderReducer.totalPrice,
 		err: state.burgerBuilderReducer.err,
-		isAuthenticated:state.authReducer.token
-
+		isAuthenticated: state.authReducer.token,
+		prices: state.burgerBuilderReducer.prices,
 	}
 };
 const mapDispatchToProps = dispatch => {
@@ -130,6 +121,9 @@ const mapDispatchToProps = dispatch => {
 		onIngredientRemove: (ingredientName) => dispatch(actionCreators.onIngredientRemove(ingredientName)),
 		initIngredients: () => {
 			dispatch(actionCreators.initIngredients())
+		},
+		initPrices: () => {
+			dispatch(actionCreators.initPrices())
 		}
 
 	}

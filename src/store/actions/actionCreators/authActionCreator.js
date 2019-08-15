@@ -3,7 +3,6 @@ import axios from 'axios'
 
 
 export const authStart = () => {
-	console.log('start');
 	return {
 		type: actionTypes.AUTH_START
 	}

@@ -1,6 +1,6 @@
 import React from 'react';
 import classes from './ContactData.module.css';
-import Buttons from "../../../components/UI/Buttons/Buttons";
+import SuccessDangerButton from "../../../components/UI/Buttons/SuccessDangerButton/SuccessDangerButton";
 import Spinner from "../../../components/UI/Spinner/Spinner";
 import Input from "../../../components/UI/Input/Input";
 import axios from '../../../axios/axiosOrders';
@@ -170,7 +170,7 @@ class ContactData extends React.Component {
 							/>
 						})
 					}
-					<Buttons disabled={!this.state.formIsValid} btnType='Success'>Order</Buttons>
+					<SuccessDangerButton disabled={!this.state.formIsValid} btnType='Success'>Order</SuccessDangerButton>
 				</form>
 			</React.Fragment>);
 		if (this.props.loading) {

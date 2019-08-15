@@ -1,5 +1,5 @@
 import React from 'react'
-import Button from '../../UI/Buttons/Buttons'
+import Button from '../../UI/Buttons/SuccessDangerButton/SuccessDangerButton'
 
 
 const OrderSummery = (props) => {

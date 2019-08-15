@@ -7,6 +7,8 @@ import {Redirect, Route, Switch, withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import * as actionCreators from './store/actions/actionCreators/authActionCreator'
 import Spinner from "./components/UI/Spinner/Spinner";
+
+import testing from './testing/testing';
 /*
 function App() {
 	const dispatch = useDispatch();
@@ -45,10 +47,10 @@ const asyncAuth = asyncComponent(() => {
 });
 */
 
-const asyncCheckout = lazy(() => import('./containers/Checkout/Checkout.js'));
-const asyncOrders = lazy(() => import('./containers/Orders/Orders'));
-const asyncAuth = lazy(() => import('./containers/Auth/Auth'));
-const BurgerBuilder = lazy(() => import('./containers/BurgerBuilder/BurgerBuilder'));
+const lazyCheckout = lazy(() => import('./containers/Checkout/Checkout.js'));
+const lazyOrders = lazy(() => import('./containers/Orders/Orders'));
+const lazyAuth = lazy(() => import('./containers/Auth/Auth'));
+const lazyBurgerBuilder = lazy(() => import('./containers/BurgerBuilder/BurgerBuilder'));
 
 class App extends React.Component {
 
@@ -58,14 +60,14 @@ class App extends React.Component {
 
 	render() {
 		let route;
-		// There is two ways of doing this, either with the old way with asyncComponent or the new way with lazy, i chose the new one.
+		// There are two ways of doing this, either with the old way with asyncComponent or the new way with lazy, i chose the new one.
 		if (this.props.isAuthenticated) {
 			/*			route = (
 
 					<Switch>
-						<Route path='/auth' component={asyncAuth}/>
-						<Route path='/orders' component={asyncOrders}/>
-						<Route path='/checkout' component={asyncCheckout}/>
+						<Route path='/auth' component={lazyAuth}/>
+						<Route path='/orders' component={lazyOrders}/>
+						<Route path='/checkout' component={lazyCheckout}/>
 						<Route path='/logout' component={Logout}/>
 						<Route path='/' exact component={BurgerBuilder}/>
 						<Redirect to='/'/>
@@ -74,18 +76,19 @@ class App extends React.Component {
 			route = (
 				<Suspense fallback={<Spinner/>}>
 					<Switch>
-						<Route path='/auth' component={asyncAuth}/>
-						<Route path='/orders' component={asyncOrders}/>
-						<Route path='/checkout' component={asyncCheckout}/>
+						<Route path='/auth' component={lazyAuth}/>
+						<Route path='/orders' component={lazyOrders}/>
+						<Route path='/checkout' component={lazyCheckout}/>
 						<Route path='/logout' component={Logout}/>
-						<Route path='/' exact component={BurgerBuilder}/>
+						<Route path='/update'  component={lazyBurgerBuilder}/>
+						<Route path='/' exact component={lazyBurgerBuilder}/>
 						<Redirect to='/'/>
 					</Switch>
 				</Suspense>);
 		} else if (!this.props.isAuthenticated) {
 			/*		route = (
 						<Switch>
-							<Route path='/auth' component={asyncAuth}/>
+							<Route path='/auth' component={lazyAuth}/>
 							<Route path='/' exact component={BurgerBuilder}/>
 							<Redirect to='/'/>
 						</Switch>
@@ -93,8 +96,9 @@ class App extends React.Component {
 			route = (
 				<Suspense fallback={<Spinner/>}>
 					<Switch>
-						<Route path='/auth' component={asyncAuth}/>
-						<Route path='/' exact component={BurgerBuilder}/>
+						<Route path='/testing' component={testing}/>
+						<Route path='/auth' component={lazyAuth}/>
+						<Route path='/' exact component={lazyBurgerBuilder}/>
 					</Switch>
 				</Suspense>);
 		}

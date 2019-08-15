@@ -20,7 +20,7 @@ class Model extends React.Component {
 						opacity: this.props.show ? '1' : '0',
 						visibility: this.props.show ? 'visible' : 'hidden',
 					}}
-					className={classes.Modal}
+					className={ this.props.updating ? classes.updateModel :classes.Modal}
 				>
 					{this.props.children}
 				</div>

@@ -1,6 +1,6 @@
 import React from 'react';
 import Input from "../../components/UI/Input/Input";
-import Buttons from "../../components/UI/Buttons/Buttons";
+import SuccessDangerButton from "../../components/UI/Buttons/SuccessDangerButton/SuccessDangerButton";
 import classes from './Auth.module.css';
 import {connect} from 'react-redux';
 import * as actionCreator from '../../store/actions/actionCreators/authActionCreator';
@@ -117,10 +117,10 @@ class Auth extends React.Component {
 			<div className={classes.Auth}>
 				<form onSubmit={this.authHandler}>
 					{form}
-					<Buttons btnType='Success'>Submit!</Buttons>
+					<SuccessDangerButton btnType='Success'>Submit!</SuccessDangerButton>
 				</form>
-				<Buttons clicked={this.switchSignUp}
-				         btnType='Danger'>{this.state.isSignUp ? 'Sign In ?' : 'Sign Up ?'}</Buttons>
+				<SuccessDangerButton clicked={this.switchSignUp}
+				                     btnType='Danger'>{this.state.isSignUp ? 'Sign In ?' : 'Sign Up ?'}</SuccessDangerButton>
 				<p>{this.props.err ? this.props.err.message : null}</p>
 			</div>
 		);
